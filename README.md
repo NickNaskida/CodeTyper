@@ -1,0 +1,3 @@
+# Code Typer
+
+### Project Description
