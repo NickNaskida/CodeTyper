@@ -1,0 +1,16 @@
+{% extends "layout.html" %}
+
+{% block title %}Home{% endblock %}
+
+{% block content %}
+    <div class="container">
+      <div class="mockup-code">
+        <pre class="text-lime-500"><code id="initial-message"></code></pre>
+<!--        <pre data-prefix="" class=""><code id="action-message"></code></pre>-->
+      </div>
+    </div>
+{% endblock %}
+
+{% block body %}
+    <script src="{{ url_for('static', filename='js/index.js') }}"></script>
+{% endblock %}
