@@ -1,0 +1,25 @@
+{% extends "layout.html" %}
+
+{% block title %}Add Code Snippet{% endblock %}
+
+{% block head %}
+    {{ codemirror.include_codemirror() }}
+{% endblock %}
+
+{% block content %}
+    {% if success %}
+        <span>Snippet added successfully.</span>
+    {% endif %}
+
+    <form method="POST">
+        {{ form.csrf_token }}
+        {{ form.code }}
+        <button type="submit">
+            Add Code Snippet
+        </button>
+    </form>
+
+    <script>
+        editor_for_code.setOption("mode", "javascript");
+    </script>
+{% endblock %}

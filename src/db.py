@@ -5,4 +5,6 @@ from src.models.base import BaseModel
 
 
 db = SQLAlchemy(model_class=BaseModel)
+Column = db.Column
+relationship = db.relationship
 
