@@ -13,6 +13,7 @@
 
     <form method="POST">
         {{ form.csrf_token }}
+        {{ form.language }}
         {{ form.code }}
         <button type="submit">
             Add Code Snippet
@@ -20,6 +21,10 @@
     </form>
 
     <script>
-        editor_for_code.setOption("mode", "javascript");
+        var selector = document.getElementById("language");
+
+        selector.addEventListener("change", () => {
+          editor_for_code.setOption("mode", selector.value);
+        });
     </script>
 {% endblock %}

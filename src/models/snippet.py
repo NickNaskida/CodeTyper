@@ -7,4 +7,5 @@ class SnippetModel(BaseModel):
 
     __tablename__ = 'code_snippets'
 
-    code = Column(db.Text())
+    language = Column(db.String(50), nullable=False)
+    code = Column(db.Text(), nullable=False)

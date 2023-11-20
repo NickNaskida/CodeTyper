@@ -20,6 +20,16 @@
 <body>
     <h1 class="page-title">Code Typer</h1>
 
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+            <div role="alert" class="alert alert-{{ category }}">
+                <span>{{ message }}</span>
+            </div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+
     {% block content %}{% endblock %}
 
     {% block body %}{% endblock %}

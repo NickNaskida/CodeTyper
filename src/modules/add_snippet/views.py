@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, flash
+from flask import Blueprint, render_template, flash, redirect, url_for
 
 from src import crud
 from src.models.snippet import SnippetModel
@@ -16,9 +16,14 @@ def index():
     form = AddSnippetForm()
 
     if form.validate_on_submit():
-        snippet = SnippetModel(code=form.code.data)
+        if form.code.data == "":
+            flash("Code field can't be empty", "error")
+            return render_template('add_snippet.html', form=form)
+
+        snippet = SnippetModel(code=form.code.data, language=form.language.data)
         crud.snippet.create(obj_new=snippet)
         flash('Snippet added successfully', 'success')
-        return render_template('add_snippet.html', form=form)
+
+        return redirect(url_for("index.index"))
 
     return render_template('add_snippet.html', form=form)
