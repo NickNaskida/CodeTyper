@@ -18,12 +18,26 @@
     {% block head %}{% endblock %}
 </head>
 <body>
-    <h1 class="page-title">Code Typer</h1>
+    <div class="navbar bg-base-100">
+      <div class="flex-1">
+          <a class="btn btn-ghost text-xl" href="{{ url_for('index.index') }}">Code Typer</a>
+      </div>
+      <div class="flex-none">
+          <ul class="menu menu-horizontal px-1">
+              <li>
+                  <a href="{{ url_for('index.index') }}">Home</a>
+              </li>
+              <li>
+                  <a href="{{ url_for('add_snippet.index') }}">Add Snippet</a>
+              </li>
+          </ul>
+      </div>
+    </div>
 
     {% with messages = get_flashed_messages(with_categories=true) %}
       {% if messages %}
         {% for category, message in messages %}
-            <div role="alert" class="alert alert-{{ category }}">
+            <div role="alert" class="alert alert-{{ category }} my-2">
                 <span>{{ message }}</span>
             </div>
         {% endfor %}

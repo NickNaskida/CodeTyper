@@ -13,10 +13,10 @@
 
     <form method="POST">
         {{ form.csrf_token }}
-        {{ form.name }}
-        {{ form.language }}
+        {{ form.name(class="input input-bordered input-primary w-full max-w-xs") }}
+        {{ form.language(class="select select-primary w-full max-w-xs") }}
         {{ form.code }}
-        <button type="submit">
+        <button class="btn btn-sm btn-primary text-xs" type="submit">
             Add Code Snippet
         </button>
     </form>

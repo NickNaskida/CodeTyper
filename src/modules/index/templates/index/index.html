@@ -7,5 +7,24 @@
 {% endblock %}
 
 {% block body %}
+    <div class="flex flex-row flex-wrap gap-4 justify-center">
+        {% for snippet in snippets %}
+            <div class="card w-80 bg-base-100 shadow-xl">
+              <div class="card-body">
+                <h3 class="card-title text-md">{{ snippet.name }}</h3>
+                <small>{{ snippet.language }}</small>
+                <div class="card-actions justify-end">
+                    <a
+                      class="btn btn-sm btn-primary text-xs"
+                      href="{{ url_for('typer.typer' , snippet_id=snippet.id) }}"
+                    >
+                        choose
+                    </a>
+                </div>
+              </div>
+            </div>
+        {% endfor %}
+    </div>
+
     <script src="{{ url_for('static', filename='js/index.js') }}"></script>
 {% endblock %}

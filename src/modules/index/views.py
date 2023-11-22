@@ -2,6 +2,8 @@ import random
 
 from flask import Blueprint, render_template, redirect
 
+from src.crud import snippet
+
 index_blueprint = Blueprint(
     'index',
     __name__,
@@ -11,7 +13,8 @@ index_blueprint = Blueprint(
 
 @index_blueprint.route('/', methods=['GET'])
 def index():
-    return render_template('index.html')
+    snippets = snippet.get_multi()
+    return render_template('index.html', snippets=snippets)
 
 
 # @index_blueprint.route('/github', methods=['GET'])
