@@ -20,7 +20,11 @@ def index():
             flash("Code field can't be empty", "error")
             return render_template('add_snippet.html', form=form)
 
-        snippet = SnippetModel(code=form.code.data, language=form.language.data)
+        snippet = SnippetModel(
+            name=form.name.data,
+            language=form.language.data,
+            code=form.code.data
+        )
         crud.snippet.create(obj_new=snippet)
         flash('Snippet added successfully', 'success')
 
