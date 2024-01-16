@@ -56,6 +56,8 @@
         let textContainer = document.getElementById('code-space');
         let currentIndex = 0;
 
+        let ignoreCharacters = ['<br>', '&nbsp;'];
+
         // Listen to keystrokes
         document.addEventListener('keydown', function(event) {
             event.preventDefault();
@@ -65,11 +67,27 @@
 
             if (pressedKey === "Backspace") {
                 // Remove last character from the text container
-                characters.pop();
-                currentIndex--;
+                let lastCharacter = characters.pop();
+
+                if (lastCharacter === "&nbsp;") {
+                    for (let i = 0; i < 3; i++) {
+                        characters.pop();
+                    }
+                }
+                if (!ignoreCharacters.includes(lastCharacter)) {
+                    currentIndex--;
+                } else {
+                    if (lastCharacter === "<br>") {
+                        currentIndex -= 1;
+                    }
+                    if (lastCharacter === "&nbsp;") {
+                        currentIndex -= 4;
+                    }
+                }
                 if (currentIndex < 0) {
                     currentIndex = 0;
                 }
+
                 textContainer.innerHTML = characters.join('');
                 moveCursor();
                 return;
@@ -121,8 +139,6 @@
                 // Cursor is in the middle, insert it at the correct position
                 textContainer.insertBefore(cursorText, textContainer.childNodes[cursorPosition]);
             }
-
-
         }
     </script>
 {% endblock %}
