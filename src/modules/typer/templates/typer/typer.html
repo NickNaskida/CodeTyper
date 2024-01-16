@@ -3,7 +3,29 @@
 {% block title %}Typer{% endblock %}
 
 {% block content %}
-    {{ snippet.code }}
+    <div class="flex flex-row gap-4 px-6">
+        <div class="w-full">
+            <h2>Code Snippet</h2>
+            <br>
+            <pre>{{ snippet.code }}</pre>
+        </div>
+        <div class="w-full">
+            Start typing here to start the game.
+        </div>
+    </div>
+
+
+    <script>
+        const snippet = `{{ snippet.code }}`;
+
+        // unescape html
+        let tempElement = document.createElement('div');
+        tempElement.innerHTML = snippet;
+        let unescapedSnippet = tempElement.innerText;
+
+
+        console.log(unescapedSnippet);
+    </script>
 {% endblock %}
 
 
