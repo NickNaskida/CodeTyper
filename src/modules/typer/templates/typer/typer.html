@@ -4,14 +4,6 @@
 
 {% block content %}
     <style>
-        .correct {
-          color: green;
-        }
-
-        .incorrect {
-          color: red;
-        }
-
         @keyframes blink {
             0%, 100% {
                 opacity: 1;
@@ -30,14 +22,23 @@
         }
     </style>
 
-    <div class="flex flex-row gap-4 px-6">
-        <div class="w-full">
-            <br>
-            <pre>{{ snippet.code }}</pre>
+    <div class="flex flex-col w-full gap-6">
+        <div class="w-full flex flex-col justify-center items-center py-6 border-2 rounded-lg border-slate-700">
+            <div class="text-2xl" id="stopwatch">00:00.00</div>
         </div>
-        <div class="w-full">
-            <br>
-            <pre id="code-space"><span class="blink_2">Start typing to start the game.</span></pre>
+        <div class="w-full flex flex-col justify-center items-center border-2 rounded-lg border-slate-700 p-4 text-sm hidden" id="stats-block">
+            <span class="text-lg mb-4">Game Statistics</span>
+            <span id="final-message" class="text-blue-400 mb-2"></span>
+            <span id="final-time"></span>
+            <span id="character-per-minute"></span>
+        </div>
+        <div class="flex flex-row gap-6 text-sm">
+            <div class="w-full border-2 rounded-lg border-slate-700 p-4">
+                <pre>{{ snippet.code }}</pre>
+            </div>
+            <div class="w-full border-2 rounded-lg border-slate-700 p-4">
+                <pre id="code-space"><span class="blink_2">Start typing to start the game.</span></pre>
+            </div>
         </div>
     </div>
 
@@ -51,26 +52,42 @@
         let unescapedSnippet = tempElement.innerText;
 
         // game logic
-        const characters = [];
+        let characters = [];
+        let displayCharacters = [];
         const initialText = unescapedSnippet;
         let textContainer = document.getElementById('code-space');
         let currentIndex = 0;
 
         let ignoreCharacters = ['<br>', '&nbsp;'];
+        let ignoreKeys = ['Shift', 'Meta', 'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown'];
+
+        let startedFlag = false;
+        let finishedFlag = false;
 
         // Listen to keystrokes
         document.addEventListener('keydown', function(event) {
             event.preventDefault();
             const pressedKey = event.key;
 
-            console.log(pressedKey, initialText[currentIndex]);
+            // Start the game
+            if (!startedFlag) {
+                startedFlag = true;
+                startStopwatch();
+            }
+
+            // Don't do anything if the game is finished
+            if (finishedFlag) {
+                return;
+            }
 
             if (pressedKey === "Backspace") {
                 // Remove last character from the text container
-                let lastCharacter = characters.pop();
+                let lastCharacter = displayCharacters.pop();
+                characters.pop();
 
                 if (lastCharacter === "&nbsp;") {
                     for (let i = 0; i < 3; i++) {
+                        displayCharacters.pop();
                         characters.pop();
                     }
                 }
@@ -88,40 +105,52 @@
                     currentIndex = 0;
                 }
 
-                textContainer.innerHTML = characters.join('');
+                textContainer.innerHTML = displayCharacters.join('');
                 moveCursor();
                 return;
-            } else if (pressedKey === "Shift" || pressedKey === "Meta") {
-                // Ignore Shift key
+            } else if (ignoreKeys.includes(pressedKey)) {
+                // Ignore keys
                 return
             } else if (pressedKey === "Tab") {
-                // Handle Tab key - move by 4 characters
+                // Handle Tab key - move by 4 displayCharacters
                 for (let i = 0; i < 4; i++) {
-                    characters.push('&nbsp;'); // Using non-breaking space for indentation
+                    displayCharacters.push('&nbsp;'); // Using non-breaking space for indentation
+                    characters.push('&nbsp;');
                     currentIndex++;
                 }
-                textContainer.innerHTML = characters.join('');
+                textContainer.innerHTML = displayCharacters.join('');
                 moveCursor();
                 return;
             } else if (pressedKey === "Enter") {
                 // Handle Enter key - go to a new line
+                displayCharacters.push('<br>');
                 characters.push('<br>');
                 currentIndex++;
-                textContainer.innerHTML = characters.join('');
+                textContainer.innerHTML = displayCharacters.join('');
                 moveCursor();
                 return;
             } else if (pressedKey === initialText[currentIndex]) {
-              // Correct key pressed
-              characters.push(`<span class="correct">${pressedKey}</span>`);
+                // Correct key pressed
+                characters.push(pressedKey);
+                displayCharacters.push(`<span class="text-emerald-500">${pressedKey}</span>`);
             } else {
-              // Incorrect key pressed
-              characters.push(`<span class="incorrect">${pressedKey}</span>`);
+                // Incorrect key pressed
+                characters.push(pressedKey);
+                displayCharacters.push(`<span class="text-rose-600">${pressedKey}</span>`);
             }
 
             currentIndex++;
 
-            textContainer.innerHTML = characters.join('');
+            textContainer.innerHTML = displayCharacters.join('');
             moveCursor();
+
+            // Check if the game is finished
+            if (characters.join('') === initialText) {
+                stopStopwatch();
+                textContainer.removeChild(cursorText);
+                finishedFlag = true;
+                CalculateAndShowStats();
+            }
         });
 
         // Cursor logic
@@ -132,13 +161,103 @@
         function moveCursor() {
             const cursorPosition = currentIndex;
 
-            if (cursorPosition === characters.length) {
+            if (cursorPosition === displayCharacters.length) {
                 // Cursor is at the end of the text, just append it
                 textContainer.appendChild(cursorText);
             } else {
                 // Cursor is in the middle, insert it at the correct position
                 textContainer.insertBefore(cursorText, textContainer.childNodes[cursorPosition]);
             }
+        }
+
+        // Stopwatch logic
+        let stopwatch;
+        let isRunning = false;
+        let centiseconds = 0;
+        let seconds = 0;
+        let minutes = 0;
+        let elapsedtime = 0;
+
+        function startStopwatch() {
+            if (!isRunning) {
+                stopwatch = setInterval(updateStopwatch, 10);
+                isRunning = true;
+            }
+        }
+
+        function stopStopwatch() {
+            clearInterval(stopwatch);
+            isRunning = false;
+            getElapsedTime();
+        }
+
+        function resetStopwatch() {
+            clearInterval(stopwatch);
+            isRunning = false;
+            centiseconds = -1;
+            seconds = 0;
+            minutes = 0;
+            updateStopwatch();
+            elapsedtime = 0;
+        }
+
+        function updateStopwatch() {
+            centiseconds++;
+            if (centiseconds === 100) {
+                centiseconds = 0;
+                seconds++;
+            }
+            if (seconds === 60) {
+                seconds = 0;
+                minutes++;
+            }
+            elapsedtime++;
+
+            const formattedTime = padNumber(minutes) + ':' + padNumber(seconds) + '.' + padNumber(centiseconds);
+            document.getElementById('stopwatch').innerText = formattedTime;
+        }
+        function getElapsedTime() {
+          const elapsedSeconds = Math.floor(elapsedtime / 100);
+          const elapsedMinutes = Math.floor(elapsedSeconds / 60);
+          const elapsedCentiseconds = elapsedtime - elapsedSeconds * 100 - elapsedMinutes *6000
+
+          return padNumber(elapsedMinutes) + ':' + padNumber(elapsedSeconds % 60) + '.' + padNumber(elapsedCentiseconds);
+        }
+
+        function padNumber(number, length = 2) {
+            return number.toString().padStart(length, '0');
+        }
+
+        // Game statistics logic
+        function CalculateAndShowStats() {
+            // Get the elapsed time
+            const formattedElapsedTime = getElapsedTime();
+            document.getElementById('final-time').innerText = `Time: ${formattedElapsedTime}`;
+
+            // Calculate character per minute
+            let timeParts = formattedElapsedTime.split(":");
+            let elapsedSeconds = parseInt(timeParts[0]) * 60 + parseFloat(timeParts[1]);
+            let elapsedMinutes = elapsedSeconds / 60;
+            let cpm = (initialText.length / elapsedMinutes).toFixed(2);
+            document.getElementById('character-per-minute').innerText = `Characters per minute: ${cpm}`;
+
+            // Show final message
+            let finalMessage = "";
+            if (cpm < 80) {
+              finalMessage = "You are typing like my grandma! Speed up those fingers! ¯\_(ツ)_/¯";
+            } else if (cpm < 150) {
+              finalMessage = "You must be copy-pasting your code from Stackoverflow, because those fingers need practice in typing code (っ◕‿◕)っ";
+            } else if (cpm < 200) {
+              finalMessage = "An average typist here! Ohh, these amateurs! (╯°□°）╯︵ ┻━┻";
+            } else if (cpm < 280) {
+              finalMessage = "God damn, that keyboard is on fire! Are you a keyboard ninja? Master level achieved! 龴ↀ◡ↀ龴";
+            } else {
+              finalMessage = "OMG! Are you a human? Keyboard left the chat ... ᕙ(⇀‸↼‶)ᕗ";
+            }
+            document.getElementById('final-message').innerText = finalMessage;
+
+            // Show the stats block
+            document.getElementById('stats-block').classList.remove('hidden');
         }
     </script>
 {% endblock %}

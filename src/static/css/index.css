@@ -32,3 +32,11 @@ h1, h2, h3, h4, h5, h6 {
 .mockup-code pre::before {
 	margin-right: 0 !important;
 }
+
+.divider-hr {
+	height: 2px;
+}
+
+.divider-vr {
+	width: 4px;
+}
