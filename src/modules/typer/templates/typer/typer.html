@@ -3,14 +3,41 @@
 {% block title %}Typer{% endblock %}
 
 {% block content %}
+    <style>
+        .correct {
+          color: green;
+        }
+
+        .incorrect {
+          color: red;
+        }
+
+        @keyframes blink {
+            0%, 100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0;
+            }
+        }
+
+        .blink {
+            animation: blink 1s infinite;
+        }
+
+        .blink_2 {
+            animation: blink 2s infinite;
+        }
+    </style>
+
     <div class="flex flex-row gap-4 px-6">
         <div class="w-full">
-            <h2>Code Snippet</h2>
             <br>
             <pre>{{ snippet.code }}</pre>
         </div>
         <div class="w-full">
-            Start typing here to start the game.
+            <br>
+            <pre id="code-space"><span class="blink_2">Start typing to start the game.</span></pre>
         </div>
     </div>
 
@@ -23,7 +50,79 @@
         tempElement.innerHTML = snippet;
         let unescapedSnippet = tempElement.innerText;
 
+        // game logic
+        const characters = [];
+        const initialText = unescapedSnippet;
+        let textContainer = document.getElementById('code-space');
+        let currentIndex = 0;
 
-        console.log(unescapedSnippet);
+        // Listen to keystrokes
+        document.addEventListener('keydown', function(event) {
+            event.preventDefault();
+            const pressedKey = event.key;
+
+            console.log(pressedKey, initialText[currentIndex]);
+
+            if (pressedKey === "Backspace") {
+                // Remove last character from the text container
+                characters.pop();
+                currentIndex--;
+                if (currentIndex < 0) {
+                    currentIndex = 0;
+                }
+                textContainer.innerHTML = characters.join('');
+                moveCursor();
+                return;
+            } else if (pressedKey === "Shift" || pressedKey === "Meta") {
+                // Ignore Shift key
+                return
+            } else if (pressedKey === "Tab") {
+                // Handle Tab key - move by 4 characters
+                for (let i = 0; i < 4; i++) {
+                    characters.push('&nbsp;'); // Using non-breaking space for indentation
+                    currentIndex++;
+                }
+                textContainer.innerHTML = characters.join('');
+                moveCursor();
+                return;
+            } else if (pressedKey === "Enter") {
+                // Handle Enter key - go to a new line
+                characters.push('<br>');
+                currentIndex++;
+                textContainer.innerHTML = characters.join('');
+                moveCursor();
+                return;
+            } else if (pressedKey === initialText[currentIndex]) {
+              // Correct key pressed
+              characters.push(`<span class="correct">${pressedKey}</span>`);
+            } else {
+              // Incorrect key pressed
+              characters.push(`<span class="incorrect">${pressedKey}</span>`);
+            }
+
+            currentIndex++;
+
+            textContainer.innerHTML = characters.join('');
+            moveCursor();
+        });
+
+        // Cursor logic
+        const cursorText = document.createElement('span');
+        cursorText.classList.add('blink');
+        cursorText.innerHTML = '⎢';
+
+        function moveCursor() {
+            const cursorPosition = currentIndex;
+
+            if (cursorPosition === characters.length) {
+                // Cursor is at the end of the text, just append it
+                textContainer.appendChild(cursorText);
+            } else {
+                // Cursor is in the middle, insert it at the correct position
+                textContainer.insertBefore(cursorText, textContainer.childNodes[cursorPosition]);
+            }
+
+
+        }
     </script>
 {% endblock %}
