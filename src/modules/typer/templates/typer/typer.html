@@ -5,3 +5,8 @@
 {% block content %}
     {{ snippet.code }}
 {% endblock %}
+
+
+{% block body %}
+<script src="{{ url_for('static', filename='js/typer.js') }}"></script>
+{% endblock %}

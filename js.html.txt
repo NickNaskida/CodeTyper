@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Typing Game</title>
+  <style>
+    body {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+      font-family: Arial, sans-serif;
+    }
+
+    #text-container {
+      font-size: 24px;
+      color: white;
+    }
+
+    .correct {
+      color: green;
+    }
+
+    .incorrect {
+      color: red;
+    }
+  </style>
+</head>
+<body>
+
+<div id="text-container"></div>
+
+<script>
+  const textContainer = document.getElementById('text-container');
+  const textToType = "hello, type this text!";
+  let currentIndex = 0;
+
+  // Initialize text container with spans
+  textContainer.innerHTML = textToType.split('').map(char => `<span>${char}</span>`).join('');
+
+  document.addEventListener('keydown', handleKeyPress);
+  
+
+  function handleKeyPress(event) {
+    if (currentIndex < textToType.length) {
+      const currentChar = textToType[currentIndex];
+      const typedChar = event.key;
+
+      if (typedChar === currentChar) {
+        textContainer.children[currentIndex].classList.add('correct');
+        currentIndex++;
+      } else {
+        textContainer.children[currentIndex].classList.add('incorrect');
+        currentIndex++;
+      }
+    }
+  }
+</script>
+
+</body>
+</html>
