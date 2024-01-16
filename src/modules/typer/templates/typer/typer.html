@@ -28,9 +28,9 @@
         </div>
         <div class="w-full flex flex-col justify-center items-center border-2 rounded-lg border-slate-700 p-4 text-sm hidden" id="stats-block">
             <span class="text-lg mb-4">Game Statistics</span>
-            <span id="final-message" class="text-blue-400 mb-2"></span>
-            <span id="final-time"></span>
+            <span id="final-message" class="text-center text-blue-400 mb-2"></span>
             <span id="character-per-minute"></span>
+            // TODO: add try again button
         </div>
         <div class="flex flex-row gap-6 text-sm">
             <div class="w-full border-2 rounded-lg border-slate-700 p-4">
@@ -54,7 +54,7 @@
         // game logic
         let characters = [];
         let displayCharacters = [];
-        const initialText = unescapedSnippet;
+        const initialText = unescapedSnippet.replace(/    /g, '\t')
         let textContainer = document.getElementById('code-space');
         let currentIndex = 0;
 
@@ -88,19 +88,10 @@
                 if (lastCharacter === "&nbsp;") {
                     for (let i = 0; i < 3; i++) {
                         displayCharacters.pop();
-                        characters.pop();
                     }
                 }
-                if (!ignoreCharacters.includes(lastCharacter)) {
-                    currentIndex--;
-                } else {
-                    if (lastCharacter === "<br>") {
-                        currentIndex -= 1;
-                    }
-                    if (lastCharacter === "&nbsp;") {
-                        currentIndex -= 4;
-                    }
-                }
+
+                currentIndex--;
                 if (currentIndex < 0) {
                     currentIndex = 0;
                 }
@@ -115,16 +106,16 @@
                 // Handle Tab key - move by 4 displayCharacters
                 for (let i = 0; i < 4; i++) {
                     displayCharacters.push('&nbsp;'); // Using non-breaking space for indentation
-                    characters.push('&nbsp;');
-                    currentIndex++;
                 }
+                characters.push('\t');
+                currentIndex++;
                 textContainer.innerHTML = displayCharacters.join('');
                 moveCursor();
                 return;
             } else if (pressedKey === "Enter") {
                 // Handle Enter key - go to a new line
                 displayCharacters.push('<br>');
-                characters.push('<br>');
+                characters.push('\n');
                 currentIndex++;
                 textContainer.innerHTML = displayCharacters.join('');
                 moveCursor();
@@ -137,6 +128,8 @@
                 // Incorrect key pressed
                 characters.push(pressedKey);
                 displayCharacters.push(`<span class="text-rose-600">${pressedKey}</span>`);
+
+                // TODO: display space differently
             }
 
             currentIndex++;
@@ -145,6 +138,9 @@
             moveCursor();
 
             // Check if the game is finished
+            console.log(initialText[currentIndex-1], pressedKey);
+
+
             if (characters.join('') === initialText) {
                 stopStopwatch();
                 textContainer.removeChild(cursorText);
@@ -219,7 +215,7 @@
         function getElapsedTime() {
           const elapsedSeconds = Math.floor(elapsedtime / 100);
           const elapsedMinutes = Math.floor(elapsedSeconds / 60);
-          const elapsedCentiseconds = elapsedtime - elapsedSeconds * 100 - elapsedMinutes *6000
+          const elapsedCentiseconds = elapsedtime - elapsedSeconds * 100 - elapsedMinutes * 6000
 
           return padNumber(elapsedMinutes) + ':' + padNumber(elapsedSeconds % 60) + '.' + padNumber(elapsedCentiseconds);
         }
@@ -232,7 +228,6 @@
         function CalculateAndShowStats() {
             // Get the elapsed time
             const formattedElapsedTime = getElapsedTime();
-            document.getElementById('final-time').innerText = `Time: ${formattedElapsedTime}`;
 
             // Calculate character per minute
             let timeParts = formattedElapsedTime.split(":");
