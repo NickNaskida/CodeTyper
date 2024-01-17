@@ -77,3 +77,21 @@ pre {
 		display: flex !important;
 	}
 }
+
+@media (max-width: 576px) {
+	body {
+		padding: 20px !important;
+		font-size: 14px;
+	}
+
+	.navbar {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		justify-content: center;
+	}
+
+	ul.menu {
+		display: none !important;
+	}
+}
