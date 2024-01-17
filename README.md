@@ -6,7 +6,7 @@ Code Typer is a simple, minimalistic code typing game, where you can practice yo
 Link to live demo: [codetyper.nicknaskida.tech](https://codetyper.nicknaskida.tech)
 
 ### 🎥 Project Demo
-<img src="demo.gif">
+<img src="demo.gif" alt="Demo Video Loading ...">
 
 ### 📋 Project Stack
 - Python
@@ -44,8 +44,6 @@ In general, we follow the "fork-and-pull" Git workflow
 - Open a Pull Request and wait for feedback.
 
 🎉 Thank you for your contribution!
-
-Feel free to add yourself to the AUTHORS if your change(s) are significant (e.g new feature, critical bug fix ...).
 
 ### 📋 License
 
