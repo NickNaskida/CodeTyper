@@ -13,12 +13,14 @@
 
     <form method="POST">
         {{ form.csrf_token }}
-        {{ form.name(class="input input-bordered input-primary w-full max-w-xs") }}
-        {{ form.language(class="select select-primary w-full max-w-xs") }}
+        {{ form.name(class="input input-bordered input-primary w-full max-w-sm mb-4 mr-4", placeholder="Enter snippet name") }}
+        {{ form.language(class="select select-primary w-full max-w-xs mb-4") }}
         {{ form.code }}
-        <button class="btn btn-sm btn-primary text-xs" type="submit">
-            Add Code Snippet
-        </button>
+        <div class="w-full flex justify-center align-center">
+            <button class="btn btn-md btn-primary text-md w-96 mt-8" type="submit">
+                Add Code Snippet
+            </button>
+        </div>
     </form>
 
     <script>

@@ -7,12 +7,12 @@
 {% endblock %}
 
 {% block body %}
-    <div class="flex flex-row flex-wrap gap-4 justify-center">
+    <div class="flex flex-row flex-wrap gap-4 justify-center mt-8">
         {% for snippet in snippets %}
-            <div class="card w-80 bg-base-100 shadow-xl">
+            <div class="card w-80 bg-base-100 shadow-xl border-2 border-slate-700">
               <div class="card-body">
-                <h3 class="card-title text-md">{{ snippet.name }}</h3>
-                <small>{{ snippet.language }}</small>
+                <h3 class="card-title text-md text-primary">{{ snippet.name }}</h3>
+                <small class="text-slate-400 text-sm">{{ snippet.language }}</small>
                 <div class="card-actions justify-end">
                     <a
                       class="btn btn-sm btn-primary text-xs"
