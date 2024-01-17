@@ -24,7 +24,13 @@
     </div>
 
 
+    <script src="https://cdn.jsdelivr.net/npm/js-confetti@latest/dist/js-confetti.browser.js"></script>
+
     <script>
+        // Import the confetti library
+        const jsConfetti = new JSConfetti();
+
+        // Pass the snippet to the template
         const snippet = `{{ snippet.code }}`;
 
         // unescape html
@@ -142,22 +148,34 @@
             moveCursor();
 
             // Check if the game is finished
-
-            console.log(JSON.stringify(characters.join('')));
-            console.log(JSON.stringify(initialText));
-            console.log(initialText[currentIndex-1], pressedKey);
-            console.log(initialText[currentIndex-1] === "\n");
-            console.log()
-            // console.log(characters.join(''));
-            // console.log(initialText);
-
             if (characters.join('') === initialText) {
+                // Stop the stopwatch
                 stopStopwatch();
+
+                // Remove the cursor
                 textContainer.removeChild(cursorText);
+
+                // Set the finished flag
                 finishedFlag = true;
+
+                // Show the stats
                 CalculateAndShowStats();
+
+                // Show the confetti
+                jsConfetti.addConfetti();
+                sleep(1000).then(() => {
+                  jsConfetti.addConfetti();
+                });
             }
+
+            // Debug
+            console.log(initialText[currentIndex-1], pressedKey);
         });
+
+        // Helper function to sleep
+        function sleep (time) {
+          return new Promise((resolve) => setTimeout(resolve, time));
+        }
 
         //
         // Cursor logic
@@ -188,6 +206,7 @@
         let minutes = 0;
         let elapsedtime = 0;
 
+        // Start the stopwatch
         function startStopwatch() {
             if (!isRunning) {
                 stopwatch = setInterval(updateStopwatch, 10);
@@ -195,12 +214,14 @@
             }
         }
 
+        // Stop the stopwatch
         function stopStopwatch() {
             clearInterval(stopwatch);
             isRunning = false;
             getElapsedTime();
         }
 
+        // Reset the stopwatch
         function resetStopwatch() {
             clearInterval(stopwatch);
             isRunning = false;
@@ -211,6 +232,7 @@
             elapsedtime = 0;
         }
 
+        // Update the stopwatch
         function updateStopwatch() {
             centiseconds++;
             if (centiseconds === 100) {
@@ -226,6 +248,8 @@
             const formattedTime = padNumber(minutes) + ':' + padNumber(seconds) + '.' + padNumber(centiseconds);
             document.getElementById('stopwatch').innerText = formattedTime;
         }
+
+        // Get the elapsed time
         function getElapsedTime() {
           const elapsedSeconds = Math.floor(elapsedtime / 100);
           const elapsedMinutes = Math.floor(elapsedSeconds / 60);
