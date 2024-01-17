@@ -2,6 +2,21 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="referrer" content="no-referrer-when-downgrade">
+    <meta name="description" content="Code Typer is a minimalistic code typing game, where you can practice your code typing skills and improve productivity, accuracy and speed.">
+    <meta name="robots" content="all">
+    <meta name="copyright" content="Nikoloz Naskidashvili">
+    <meta name="address" content="Georgia, Tbilisi">
+    <meta property="og:locale" content="ka-GE">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Code Typer">
+    <meta property="og:description" content="">
+    <meta property="og:url" content="{{ request.base_url }}">
+    <meta property="og:site_name" content="Code Typer is a minimalistic code typing game, where you can practice your code typing skills and improve productivity, accuracy and speed.">
+
     <title>{% block title %}{% endblock %} — Code Typer</title>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -44,10 +59,18 @@
       {% endif %}
     {% endwith %}
 
-    <div class="px-6 mb-4">
+    <div class="page_content px-6 mb-4">
         {% block content %}{% endblock %}
+        {% block body %}{% endblock %}
     </div>
 
-    {% block body %}{% endblock %}
+    <div class="mobile_content flex flex-col justify-center items-center py-16 w-full text-center">
+        Who on earth uses a mobile to write code?
+        <br>
+        Grab your laptop G!
+        <br>
+        <br>
+        <iframe src="https://giphy.com/embed/pH6bOPv3NRePOlt5Qn" width="400" height="320" frameBorder="0" class="giphy-embed" allowFullScreen></iframe>
+    </div>
 </body>
 </html>

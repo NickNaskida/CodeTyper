@@ -57,3 +57,19 @@ h1, h2, h3, h4, h5, h6 {
 .blink_2 {
 	animation: blink 2s infinite;
 }
+
+.mobile_content {
+	display: none !important;
+}
+
+
+
+@media (max-width: 768px) {
+	.page_content {
+		display: none !important;
+	}
+
+	.mobile_content {
+		display: flex !important;
+	}
+}
