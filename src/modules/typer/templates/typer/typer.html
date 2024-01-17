@@ -2,6 +2,10 @@
 
 {% block title %}Typer{% endblock %}
 
+{% block head %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/highlight-theme.css') }}">
+{% endblock %}
+
 {% block content %}
     <div class="flex flex-col w-full gap-6">
         <div class="w-full flex flex-col justify-center items-center py-6 border-2 rounded-lg border-slate-700">
@@ -15,7 +19,7 @@
         </div>
         <div class="flex flex-row gap-6 text-sm">
             <div class="w-full border-2 rounded-lg border-slate-700 p-4">
-                <pre>{{ snippet.code }}</pre>
+                <pre><code data-language="{{ snippet.language }}">{{ snippet.code }}</code></pre>
             </div>
             <div class="w-full border-2 rounded-lg border-slate-700 p-4">
                 <pre id="code-space"><span class="blink_2">Start typing to start the game.</span></pre>
@@ -295,4 +299,6 @@
             document.getElementById('stats-block').classList.remove('hidden');
         }
     </script>
+
+    <script src="{{ url_for('static', filename='js/rainbow-custom.min.js') }}"></script>
 {% endblock %}
