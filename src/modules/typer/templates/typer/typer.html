@@ -27,7 +27,7 @@
     <script src="https://cdn.jsdelivr.net/npm/js-confetti@latest/dist/js-confetti.browser.js"></script>
 
     <script>
-        // Import the confetti library
+        // Initialize the confetti library
         const jsConfetti = new JSConfetti();
 
         // Pass the snippet to the template
@@ -103,7 +103,7 @@
                   }
                 } else {
                   // Incorrect key pressed
-                  displayCharacters.push(`<span class="text-rose-600">████</span>`); // Using non-breaking space for indentation
+                  displayCharacters.push(`<span class="text-rose-600">████</span>`);
                 }
                 characters.push('\t');
 
