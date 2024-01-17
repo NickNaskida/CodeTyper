@@ -3,34 +3,15 @@
 {% block title %}Typer{% endblock %}
 
 {% block content %}
-    <style>
-        @keyframes blink {
-            0%, 100% {
-                opacity: 1;
-            }
-            50% {
-                opacity: 0;
-            }
-        }
-
-        .blink {
-            animation: blink 1s infinite;
-        }
-
-        .blink_2 {
-            animation: blink 2s infinite;
-        }
-    </style>
-
     <div class="flex flex-col w-full gap-6">
         <div class="w-full flex flex-col justify-center items-center py-6 border-2 rounded-lg border-slate-700">
             <div class="text-2xl" id="stopwatch">00:00.00</div>
         </div>
         <div class="w-full flex flex-col justify-center items-center border-2 rounded-lg border-slate-700 p-4 text-sm hidden" id="stats-block">
             <span class="text-lg mb-4">Game Statistics</span>
-            <span id="final-message" class="text-center text-blue-400 mb-2"></span>
-            <span id="character-per-minute"></span>
-            // TODO: add try again button
+            <span class="text-center text-blue-400 mb-2" id="final-message"></span>
+            <span class="mb-4" id="character-per-minute"></span>
+            <button class="btn btn-sm btn-primary text-xs" onclick="window.location.reload()">Try Again</button>
         </div>
         <div class="flex flex-row gap-6 text-sm">
             <div class="w-full border-2 rounded-lg border-slate-700 p-4">
@@ -51,15 +32,16 @@
         tempElement.innerHTML = snippet;
         let unescapedSnippet = tempElement.innerText;
 
+        //
         // game logic
+        //
         let characters = [];
         let displayCharacters = [];
         const initialText = unescapedSnippet.replace(/    /g, '\t')
         let textContainer = document.getElementById('code-space');
         let currentIndex = 0;
 
-        let ignoreCharacters = ['<br>', '&nbsp;'];
-        let ignoreKeys = ['Shift', 'Meta', 'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown'];
+        let ignoreKeys = ['Shift', 'Meta', 'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown', 'Delete'];
 
         let startedFlag = false;
         let finishedFlag = false;
@@ -85,17 +67,20 @@
                 let lastCharacter = displayCharacters.pop();
                 characters.pop();
 
+                // Remove 3 more characters if the last character was a tab
                 if (lastCharacter === "&nbsp;") {
                     for (let i = 0; i < 3; i++) {
                         displayCharacters.pop();
                     }
                 }
 
+                // Decrement the current index and make sure it doesn't go below 0
                 currentIndex--;
                 if (currentIndex < 0) {
                     currentIndex = 0;
                 }
 
+                // Reflect the changes in the text container
                 textContainer.innerHTML = displayCharacters.join('');
                 moveCursor();
                 return;
@@ -103,12 +88,23 @@
                 // Ignore keys
                 return
             } else if (pressedKey === "Tab") {
-                // Handle Tab key - move by 4 displayCharacters
-                for (let i = 0; i < 4; i++) {
-                    displayCharacters.push('&nbsp;'); // Using non-breaking space for indentation
+                // Handle Tab key - append 4 spaces
+
+                if (initialText[currentIndex] === "\t") {
+                  // Correct key pressed
+                  for (let i = 0; i < 4; i++) {
+                      displayCharacters.push('&nbsp;'); // Using non-breaking space for indentation
+                  }
+                } else {
+                  // Incorrect key pressed
+                  displayCharacters.push(`<span class="text-rose-600">████</span>`); // Using non-breaking space for indentation
                 }
                 characters.push('\t');
+
+                // Increment the current index
                 currentIndex++;
+
+                // Reflect the changes in the text container
                 textContainer.innerHTML = displayCharacters.join('');
                 moveCursor();
                 return;
@@ -116,7 +112,11 @@
                 // Handle Enter key - go to a new line
                 displayCharacters.push('<br>');
                 characters.push('\n');
+
+                // Increment the current index
                 currentIndex++;
+
+                // Reflect the changes in the text container
                 textContainer.innerHTML = displayCharacters.join('');
                 moveCursor();
                 return;
@@ -127,19 +127,29 @@
             } else {
                 // Incorrect key pressed
                 characters.push(pressedKey);
-                displayCharacters.push(`<span class="text-rose-600">${pressedKey}</span>`);
-
-                // TODO: display space differently
+                if (pressedKey === ' ') {
+                  displayCharacters.push(`<span class="text-rose-600">█</span>`);
+                } else {
+                    displayCharacters.push(`<span class="text-rose-600">${pressedKey}</span>`);
+                }
             }
 
+            // Increment the current index
             currentIndex++;
 
+            // Reflect the changes in the text container
             textContainer.innerHTML = displayCharacters.join('');
             moveCursor();
 
             // Check if the game is finished
-            console.log(initialText[currentIndex-1], pressedKey);
 
+            console.log(JSON.stringify(characters.join('')));
+            console.log(JSON.stringify(initialText));
+            console.log(initialText[currentIndex-1], pressedKey);
+            console.log(initialText[currentIndex-1] === "\n");
+            console.log()
+            // console.log(characters.join(''));
+            // console.log(initialText);
 
             if (characters.join('') === initialText) {
                 stopStopwatch();
@@ -149,7 +159,9 @@
             }
         });
 
+        //
         // Cursor logic
+        //
         const cursorText = document.createElement('span');
         cursorText.classList.add('blink');
         cursorText.innerHTML = '⎢';
@@ -166,7 +178,9 @@
             }
         }
 
+        //
         // Stopwatch logic
+        //
         let stopwatch;
         let isRunning = false;
         let centiseconds = 0;
@@ -224,7 +238,9 @@
             return number.toString().padStart(length, '0');
         }
 
+        //
         // Game statistics logic
+        //
         function CalculateAndShowStats() {
             // Get the elapsed time
             const formattedElapsedTime = getElapsedTime();
@@ -241,11 +257,11 @@
             if (cpm < 80) {
               finalMessage = "You are typing like my grandma! Speed up those fingers! ¯\_(ツ)_/¯";
             } else if (cpm < 150) {
-              finalMessage = "You must be copy-pasting your code from Stackoverflow, because those fingers need practice in typing code (っ◕‿◕)っ";
+              finalMessage = "You must be copy-pasting your code from Stackoverflow, because there ain't speed in those fingers! (╯°□°）╯︵ ┻━┻";
             } else if (cpm < 200) {
               finalMessage = "An average typist here! Ohh, these amateurs! (╯°□°）╯︵ ┻━┻";
             } else if (cpm < 280) {
-              finalMessage = "God damn, that keyboard is on fire! Are you a keyboard ninja? Master level achieved! 龴ↀ◡ↀ龴";
+              finalMessage = "God damn, that keyboard is on fire! Are you a keyboard ninja? Master level achieved! ✧(ↀ-ↀ)✧";
             } else {
               finalMessage = "OMG! Are you a human? Keyboard left the chat ... ᕙ(⇀‸↼‶)ᕗ";
             }
