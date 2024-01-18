@@ -47,7 +47,7 @@
         //
         let characters = [];
         let displayCharacters = [];
-        const initialText = unescapedSnippet.replace(/    /g, '\t')
+        const initialText = unescapedSnippet.replace(/    /g, '····')
         let textContainer = document.getElementById('code-space');
         let currentIndex = 0;
 
@@ -81,6 +81,8 @@
                 if (lastCharacter === "&nbsp;") {
                     for (let i = 0; i < 3; i++) {
                         displayCharacters.pop();
+                        characters.pop();
+                        currentIndex--;
                     }
                 }
 
@@ -100,16 +102,19 @@
             } else if (pressedKey === "Tab") {
                 // Handle Tab key - append 4 spaces
 
-                if (initialText[currentIndex] === "\t") {
+                if (initialText[currentIndex] === "·") {
                   // Correct key pressed
                   for (let i = 0; i < 4; i++) {
                       displayCharacters.push('&nbsp;'); // Using non-breaking space for indentation
+                      characters.push('·');
+                      currentIndex++;
                   }
+                  currentIndex--;
                 } else {
                   // Incorrect key pressed
                   displayCharacters.push(`<span class="text-rose-600">████</span>`);
+                  characters.push('·');
                 }
-                characters.push('\t');
 
                 // Increment the current index
                 currentIndex++;
@@ -117,6 +122,7 @@
                 // Reflect the changes in the text container
                 textContainer.innerHTML = displayCharacters.join('');
                 moveCursor();
+                console.log(characters.join(''));
                 return;
             } else if (pressedKey === "Enter") {
                 // Handle Enter key - go to a new line
@@ -138,9 +144,11 @@
                 // Incorrect key pressed
                 characters.push(pressedKey);
                 if (pressedKey === ' ') {
+                  // Handle space key
                   displayCharacters.push(`<span class="text-rose-600">█</span>`);
                 } else {
-                    displayCharacters.push(`<span class="text-rose-600">${pressedKey}</span>`);
+                  // Handle other keys
+                  displayCharacters.push(`<span class="text-rose-600">${pressedKey}</span>`);
                 }
             }
 
@@ -152,6 +160,8 @@
             moveCursor();
 
             // Check if the game is finished
+            console.log(characters.join(''));
+            console.log(initialText);
             if (characters.join('') === initialText) {
                 // Stop the stopwatch
                 stopStopwatch();
