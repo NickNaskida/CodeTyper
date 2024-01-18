@@ -122,7 +122,6 @@
                 // Reflect the changes in the text container
                 textContainer.innerHTML = displayCharacters.join('');
                 moveCursor();
-                console.log(characters.join(''));
                 return;
             } else if (pressedKey === "Enter") {
                 // Handle Enter key - go to a new line
@@ -160,8 +159,6 @@
             moveCursor();
 
             // Check if the game is finished
-            console.log(characters.join(''));
-            console.log(initialText);
             if (characters.join('') === initialText) {
                 // Stop the stopwatch
                 stopStopwatch();
