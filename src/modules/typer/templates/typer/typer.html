@@ -170,12 +170,14 @@
                 finishedFlag = true;
 
                 // Show the stats
-                CalculateAndShowStats();
+                const cpmEmoji = CalculateAndShowStats();
 
                 // Show the confetti
                 jsConfetti.addConfetti();
                 sleep(1000).then(() => {
-                  jsConfetti.addConfetti();
+                  jsConfetti.addConfetti({
+                    emojis: cpmEmoji,
+                  });
                 });
             }
 
@@ -288,22 +290,30 @@
             document.getElementById('character-per-minute').innerText = `Characters per minute: ${cpm}`;
 
             // Show final message
-            let finalMessage = "";
+            let cpmEmojis;
+            let finalMessage;
             if (cpm < 80) {
-              finalMessage = "You are typing like my grandma! Speed up those fingers! ¯\_(ツ)_/¯";
-            } else if (cpm < 150) {
-              finalMessage = "You must be copy-pasting your code from Stackoverflow, because there ain't speed in those fingers! (╯°□°）╯︵ ┻━┻";
-            } else if (cpm < 200) {
-              finalMessage = "An average typist here! Ohh, these amateurs! (╯°□°）╯︵ ┻━┻";
-            } else if (cpm < 280) {
-              finalMessage = "God damn, that keyboard is on fire! Are you a keyboard ninja? Master level achieved! ✧(ↀ-ↀ)✧";
+                finalMessage = "You are typing like my grandma! Speed up those fingers! ¯\_(ツ)_/¯";
+                cpmEmojis = ["👵🏻", "🐢"];
+            } else if (cpm < 160) {
+                finalMessage = "You must be copy-pasting your code from Stackoverflow, because there ain't speed in those fingers! (╯°□°）╯︵ ┻━┻";
+                cpmEmojis = ["🐌", "🐢"];
+            } else if (cpm < 220) {
+                finalMessage = "An average typist here! Ohh, these amateurs! (╯°□°）╯︵ ┻━┻";
+                cpmEmojis = ["😑", "⌨️"];
+            } else if (cpm < 300) {
+                finalMessage = "God damn, that keyboard is on fire! Are you a keyboard ninja? Master level achieved! ✧(ↀ-ↀ)✧";
+                cpmEmojis = ["🔥", "🥷"];
             } else {
-              finalMessage = "OMG! Are you a human? Keyboard left the chat ... ᕙ(⇀‸↼‶)ᕗ";
+                finalMessage = "OMG! Are you a human? Keyboard left the chat ... ᕙ(⇀‸↼‶)ᕗ";
+                cpmEmojis = ["🤯", "🤖"];
             }
             document.getElementById('final-message').innerText = finalMessage;
 
             // Show the stats block
             document.getElementById('stats-block').classList.remove('hidden');
+
+            return cpmEmojis;
         }
     </script>
 
