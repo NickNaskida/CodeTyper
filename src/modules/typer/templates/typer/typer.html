@@ -287,7 +287,7 @@
             let elapsedSeconds = parseInt(timeParts[0]) * 60 + parseFloat(timeParts[1]);
             let elapsedMinutes = elapsedSeconds / 60;
             let cpm = (initialText.length / elapsedMinutes).toFixed(2);
-            document.getElementById('character-per-minute').innerText = `Characters per minute: ${cpm}`;
+            document.getElementById('character-per-minute').innerText = `Characters per minute (CPM): ${cpm}`;
 
             // Show final message
             let cpmEmojis;
