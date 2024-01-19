@@ -47,7 +47,7 @@
         //
         let characters = [];
         let displayCharacters = [];
-        const initialText = unescapedSnippet.replace(/    /g, '\t')
+        const initialText = unescapedSnippet.replace(/    /g, '····')
         let textContainer = document.getElementById('code-space');
         let currentIndex = 0;
 
@@ -81,6 +81,8 @@
                 if (lastCharacter === "&nbsp;") {
                     for (let i = 0; i < 3; i++) {
                         displayCharacters.pop();
+                        characters.pop();
+                        currentIndex--;
                     }
                 }
 
@@ -100,16 +102,19 @@
             } else if (pressedKey === "Tab") {
                 // Handle Tab key - append 4 spaces
 
-                if (initialText[currentIndex] === "\t") {
+                if (initialText[currentIndex] === "·") {
                   // Correct key pressed
                   for (let i = 0; i < 4; i++) {
                       displayCharacters.push('&nbsp;'); // Using non-breaking space for indentation
+                      characters.push('·');
+                      currentIndex++;
                   }
+                  currentIndex--;
                 } else {
                   // Incorrect key pressed
                   displayCharacters.push(`<span class="text-rose-600">████</span>`);
+                  characters.push('·');
                 }
-                characters.push('\t');
 
                 // Increment the current index
                 currentIndex++;
@@ -120,8 +125,15 @@
                 return;
             } else if (pressedKey === "Enter") {
                 // Handle Enter key - go to a new line
-                displayCharacters.push('<br>');
-                characters.push('\n');
+                if (initialText[currentIndex] === "\n") {
+                  // Correct key pressed
+                  displayCharacters.push('<br>');
+                  characters.push('\n');
+                } else {
+                  // Incorrect key pressed
+                  displayCharacters.push(`<span class="text-rose-600">⏎<br></span>`);
+                  characters.push('\n');
+                }
 
                 // Increment the current index
                 currentIndex++;
@@ -138,9 +150,11 @@
                 // Incorrect key pressed
                 characters.push(pressedKey);
                 if (pressedKey === ' ') {
+                  // Handle space key
                   displayCharacters.push(`<span class="text-rose-600">█</span>`);
                 } else {
-                    displayCharacters.push(`<span class="text-rose-600">${pressedKey}</span>`);
+                  // Handle other keys
+                  displayCharacters.push(`<span class="text-rose-600">${pressedKey}</span>`);
                 }
             }
 
@@ -163,12 +177,14 @@
                 finishedFlag = true;
 
                 // Show the stats
-                CalculateAndShowStats();
+                const cpmEmoji = CalculateAndShowStats();
 
                 // Show the confetti
                 jsConfetti.addConfetti();
                 sleep(1000).then(() => {
-                  jsConfetti.addConfetti();
+                  jsConfetti.addConfetti({
+                    emojis: cpmEmoji,
+                  });
                 });
             }
 
@@ -278,25 +294,33 @@
             let elapsedSeconds = parseInt(timeParts[0]) * 60 + parseFloat(timeParts[1]);
             let elapsedMinutes = elapsedSeconds / 60;
             let cpm = (initialText.length / elapsedMinutes).toFixed(2);
-            document.getElementById('character-per-minute').innerText = `Characters per minute: ${cpm}`;
+            document.getElementById('character-per-minute').innerText = `Characters per minute (CPM): ${cpm}`;
 
             // Show final message
-            let finalMessage = "";
-            if (cpm < 80) {
-              finalMessage = "You are typing like my grandma! Speed up those fingers! ¯\_(ツ)_/¯";
-            } else if (cpm < 150) {
-              finalMessage = "You must be copy-pasting your code from Stackoverflow, because there ain't speed in those fingers! (╯°□°）╯︵ ┻━┻";
-            } else if (cpm < 200) {
-              finalMessage = "An average typist here! Ohh, these amateurs! (╯°□°）╯︵ ┻━┻";
-            } else if (cpm < 280) {
-              finalMessage = "God damn, that keyboard is on fire! Are you a keyboard ninja? Master level achieved! ✧(ↀ-ↀ)✧";
+            let cpmEmojis;
+            let finalMessage;
+            if (cpm < 100) {
+                finalMessage = "You are typing like my grandma! Speed up those fingers! ¯\_(ツ)_/¯";
+                cpmEmojis = ["👵🏻", "🐢"];
+            } else if (cpm < 175) {
+                finalMessage = "You must be copy-pasting your code from Stackoverflow, because there ain't speed in those fingers! (╯°□°）╯︵ ┻━┻";
+                cpmEmojis = ["🐌", "🐢"];
+            } else if (cpm < 250) {
+                finalMessage = "An average typist here! Ohh, these amateurs! (╯°□°）╯︵ ┻━┻";
+                cpmEmojis = ["😑", "⌨️"];
+            } else if (cpm < 325) {
+                finalMessage = "God damn, that keyboard is on fire! Are you a keyboard ninja? Master level achieved! ✧(ↀ-ↀ)✧";
+                cpmEmojis = ["🔥", "🥷"];
             } else {
-              finalMessage = "OMG! Are you a human? Keyboard left the chat ... ᕙ(⇀‸↼‶)ᕗ";
+                finalMessage = "OMG! Are you a human? Keyboard left the chat ... ᕙ(⇀‸↼‶)ᕗ";
+                cpmEmojis = ["🤯", "🤖"];
             }
             document.getElementById('final-message').innerText = finalMessage;
 
             // Show the stats block
             document.getElementById('stats-block').classList.remove('hidden');
+
+            return cpmEmojis;
         }
     </script>
 
