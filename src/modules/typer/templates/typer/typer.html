@@ -125,8 +125,15 @@
                 return;
             } else if (pressedKey === "Enter") {
                 // Handle Enter key - go to a new line
-                displayCharacters.push('<br>');
-                characters.push('\n');
+                if (initialText[currentIndex] === "\n") {
+                  // Correct key pressed
+                  displayCharacters.push('<br>');
+                  characters.push('\n');
+                } else {
+                  // Incorrect key pressed
+                  displayCharacters.push(`<span class="text-rose-600">█<br></span>`);
+                  characters.push('\n');
+                }
 
                 // Increment the current index
                 currentIndex++;
@@ -292,16 +299,16 @@
             // Show final message
             let cpmEmojis;
             let finalMessage;
-            if (cpm < 80) {
+            if (cpm < 100) {
                 finalMessage = "You are typing like my grandma! Speed up those fingers! ¯\_(ツ)_/¯";
                 cpmEmojis = ["👵🏻", "🐢"];
-            } else if (cpm < 160) {
+            } else if (cpm < 175) {
                 finalMessage = "You must be copy-pasting your code from Stackoverflow, because there ain't speed in those fingers! (╯°□°）╯︵ ┻━┻";
                 cpmEmojis = ["🐌", "🐢"];
-            } else if (cpm < 220) {
+            } else if (cpm < 250) {
                 finalMessage = "An average typist here! Ohh, these amateurs! (╯°□°）╯︵ ┻━┻";
                 cpmEmojis = ["😑", "⌨️"];
-            } else if (cpm < 300) {
+            } else if (cpm < 325) {
                 finalMessage = "God damn, that keyboard is on fire! Are you a keyboard ninja? Master level achieved! ✧(ↀ-ↀ)✧";
                 cpmEmojis = ["🔥", "🥷"];
             } else {
