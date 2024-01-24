@@ -128,12 +128,11 @@
                 if (initialText[currentIndex] === "\n") {
                   // Correct key pressed
                   displayCharacters.push('<br>');
-                  characters.push('\n');
                 } else {
                   // Incorrect key pressed
                   displayCharacters.push(`<span class="text-rose-600">⏎<br></span>`);
-                  characters.push('\n');
                 }
+                characters.push('\n');
 
                 // Increment the current index
                 currentIndex++;
