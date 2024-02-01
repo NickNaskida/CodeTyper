@@ -109,15 +109,14 @@
                       characters.push('·');
                       currentIndex++;
                   }
-                  currentIndex--;
                 } else {
                   // Incorrect key pressed
                   displayCharacters.push(`<span class="text-rose-600">████</span>`);
                   characters.push('·');
-                }
 
-                // Increment the current index
-                currentIndex++;
+                  // Increment the current index
+                  currentIndex++;
+                }
 
                 // Reflect the changes in the text container
                 textContainer.innerHTML = displayCharacters.join('');
