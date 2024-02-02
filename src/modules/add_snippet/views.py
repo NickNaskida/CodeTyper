@@ -12,7 +12,7 @@ add_snippet_blueprint = Blueprint(
 
 
 @add_snippet_blueprint.route('/add-snippet', methods=['GET', 'POST'])
-def add_snippet():
+def index():
     form = AddSnippetForm()
 
     if form.validate_on_submit():
