@@ -8,6 +8,40 @@ Link to live demo: [codetyper.nicknaskida.tech](https://codetyper.nicknaskida.te
 ### 🎥 Project Demo
 <img src="demo.gif" alt="Demo Video Loading ...">
 
+### 📋 Documentation
+1. Clone the repository
+    ```sh
+    git clone https://github.com/NickNaskida/CodeTyper.git
+    ```
+       
+
+2. Navigate to the project directory 
+    ```sh
+    cd CodeTyper
+    ```
+   
+3. Create & activate a virtual environment
+    ```sh
+    python -m venv venv
+    source venv/bin/activate
+    ```
+   
+4. Install the required packages
+    ```sh
+    pip install -r requirements.txt
+    ```
+   
+5. Run the migrations
+    ```sh
+    sudo bash scripts/linux/migrate.sh
+    ```
+   
+6. Run the application
+    ```sh
+    export FLASK_APP="main"
+    flask run
+    ```
+
 ### 📋 Project Stack
 - Python
 - Flask
