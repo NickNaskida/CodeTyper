@@ -15,7 +15,7 @@ def typer(snippet_id: int):
     snippet_obj = snippet.get(_id=snippet_id)
 
     if not snippet_obj:
-        abort(418)  # LOL :D
+        abort(404)
 
     return render_template('typer.html', snippet=snippet_obj)
 
