@@ -3,8 +3,6 @@
 ### Project Description
 Code Typer is a simple, minimalistic code typing game, where you can practice your code typing skills and improve productivity, accuracy and speed.
 
-Link to live demo: [codetyper.nicknaskida.tech](https://codetyper.nicknaskida.tech)
-
 ### 🎥 Project Demo
 <img src="demo.gif" alt="Demo Video Loading ...">
 
